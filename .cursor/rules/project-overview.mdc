@@ -1,0 +1,37 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 模拟来电APP项目概述
+
+## 项目简介
+
+[Virtual Call](mdc:README.md) 是一款模拟来电应用，可以帮助用户在社交、工作、生活等多种场景中快速脱身。本项目采用Cursor通过Vibe Coding方法开发，展示AI辅助编程的能力和效率。
+
+项目详细设计文档: [SummaryDesign.md](mdc:SummaryDesign.md) 和 [DetailedDesign.md](mdc:DetailedDesign.md)
+
+## 主要功能
+
+- **一键来电**：一键触发模拟来电，快速满足紧急脱身需求
+- **自定义来电**：自定义来电者信息、铃声、震动方式等
+- **多品牌界面模板**：提供多款手机品牌机型的来电界面模板
+- **定时任务**：预设定时来电任务，按计划自动触发
+
+## 技术栈
+
+- **前端框架**: React Native
+- **状态管理**: Redux Toolkit
+- **路由导航**: React Navigation 6
+- **数据持久化**: AsyncStorage/Realm
+- **UI组件库**: React Native Paper
+- **原生模块**: React Native Modules
+
+## 关键文件
+
+- [App.tsx](mdc:VirtualCall/App.tsx): 应用入口
+- [package.json](mdc:VirtualCall/package.json): 项目依赖配置
+
+## Vibe Coding
+
+Vibe Coding是一种AI辅助编程方法，通过Cursor编辑器与AI模型结合，实现高效的代码生成和理解。

@@ -1,0 +1,179 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 模拟来电APP组件开发指南
+
+## 组件分类
+
+项目组件分为四类:
+
+1. **页面组件**: 完整页面，通常与路由绑定
+2. **容器组件**: 处理业务逻辑，不直接涉及UI样式
+3. **展示组件**: 纯UI组件，通过props接收数据
+4. **复合组件**: 组合多个基础组件实现复杂功能
+
+## 组件目录结构
+
+```
+/components
+├── /common           # 通用组件
+│   ├── Button.tsx    # 自定义按钮
+│   ├── Card.tsx      # 卡片组件
+│   ├── Input.tsx     # 输入框组件
+│   └── ...
+├── /call             # 来电相关组件
+│   ├── CallScreen.tsx       # 通用来电界面
+│   ├── IPhoneCallScreen.tsx # iPhone风格来电界面
+│   ├── AndroidCallScreen.tsx # Android风格来电界面
+│   └── ...
+├── /schedule         # 定时任务相关组件
+│   ├── TaskItem.tsx  # 任务列表项
+│   ├── TaskForm.tsx  # 任务编辑表单
+│   └── ...
+└── /settings         # 设置相关组件
+    ├── SettingItem.tsx # 设置项
+    ├── SwitchSetting.tsx # 开关设置
+    └── ...
+```
+
+## 组件模板
+
+### 函数组件模板
+
+```typescript
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { useTheme } from 'react-native-paper';
+
+interface MyComponentProps {
+  title: string;
+  onPress?: () => void;
+  // 其他props
+}
+
+export const MyComponent: React.FC<MyComponentProps> = ({
+  title,
+  onPress,
+  // 其他props
+}) => {
+  const theme = useTheme();
+  
+  // 组件逻辑
+  
+  return (
+    <View style={styles.container}>
+      <Text style={[styles.title, { color: theme.colors.primary }]}>
+        {title}
+      </Text>
+      {/* 其他UI元素 */}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    // 样式
+  },
+  title: {
+    // 样式
+  },
+  // 其他样式
+});
+```
+
+### 容器组件模板
+
+```typescript
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { MyComponent } from '../components/MyComponent';
+import { someAction } from '../redux/slices/mySlice';
+
+export const MyComponentContainer: React.FC = () => {
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.mySlice.data);
+  
+  const handlePress = useCallback(() => {
+    dispatch(someAction());
+  }, [dispatch]);
+  
+  return <MyComponent title={data.title} onPress={handlePress} />;
+};
+```
+
+## 样式指南
+
+### 主题使用
+
+使用React Native Paper的主题系统:
+
+```typescript
+import { useTheme } from 'react-native-paper';
+
+const MyComponent = () => {
+  const theme = useTheme();
+  
+  return (
+    <View style={{ backgroundColor: theme.colors.background }}>
+      <Text style={{ color: theme.colors.primary }}>文本内容</Text>
+    </View>
+  );
+};
+```
+
+### 响应式布局
+
+使用flexbox确保在不同屏幕尺寸上的适配:
+
+```typescript
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+```
+
+## 自定义Hook使用
+
+为组件逻辑封装自定义Hook:
+
+```typescript
+// hooks/useCallSimulator.ts
+export const useCallSimulator = () => {
+  const [isActive, setIsActive] = useState(false);
+  
+  const startCall = useCallback(() => {
+    // 开始来电逻辑
+    setIsActive(true);
+  }, []);
+  
+  const endCall = useCallback(() => {
+    // 结束来电逻辑
+    setIsActive(false);
+  }, []);
+  
+  return { isActive, startCall, endCall };
+};
+
+// 在组件中使用
+const CallComponent = () => {
+  const { isActive, startCall, endCall } = useCallSimulator();
+  // ...
+};
+```
+
+## 性能优化
+
+1. **使用React.memo**: 防止不必要的重渲染
+2. **使用useCallback和useMemo**: 避免重复创建函数和计算值
+3. **使用PureComponent**: 类组件中使用PureComponent减少重渲染
+4. **使用VirtualizedList**: 长列表使用VirtualizedList或FlatList优化
+5. **延迟加载**: 非关键组件使用延迟加载
